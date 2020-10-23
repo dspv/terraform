@@ -16,7 +16,7 @@ terraform {
 # 7. Network interface with an IP in the subnet that was created on step 4
 # 8. Assign an EIP to the network interface create on step 7
 # 9. Install Ubuntu server and install/ebable Apache 2
-
+# test
 
 # Configure the AWS Provider
 provider "aws" {
