@@ -1,6 +1,8 @@
-########################
-### Some experiments ###
-########################
+###########################
+### Launch a web server ###
+###########################
+
+### Terraform Init
 terraform {
   required_providers {
     aws = {
@@ -55,7 +57,7 @@ resource "aws_route_table" "prod-route-table" {
 ### 4. Subnet
 resource "aws_subnet" "prod-subnet-1" {
   vpc_id            = aws_vpc.prod-vpc.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = var.subnet_prefix
   availability_zone = "us-east-1a"
 
   tags = {
@@ -91,7 +93,7 @@ resource "aws_security_group" "allow_web" {
     cidr_blocks = ["0.0.0.0/0"]
   }  
 
-ingress {
+  ingress {
     description = "SSH"
     from_port   = 22
     to_port     = 22
@@ -162,3 +164,16 @@ resource "aws_instance" "web-server-instance" {
   }
 }
 
+
+
+#############################
+### Make some output data ###
+#############################
+
+output "server_public_ip" {
+  value = aws_eip.one.public_ip
+}
+
+output "server_public_dns" {
+  value = aws_eip.one.public_dns
+}
