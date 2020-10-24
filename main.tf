@@ -17,6 +17,27 @@ provider "aws" {
   region = "us-east-1"
 }
 
+#################
+### Variables ###
+#################
+variable "subnet_prefix" {
+  description = "CIDR block for subnet"
+  default = "10.0.1.0/24"
+}
+
+variable "instance_type" {
+  description = "EC2 Instance type"
+  default = "t2.micro"
+}
+
+variable "instance_ami" {
+  description = "AMI for EC2 instance"
+  default = "ami-0947d2ba12ee1ff75"
+}
+
+###############
+### Modules ###
+###############
 ### 1. VPC
 resource "aws_vpc" "prod-vpc" {
   cidr_block = "10.0.0.0/16"
@@ -135,8 +156,8 @@ resource "aws_eip" "one" {
 
 ### 9. Install web server on Amazon2 EC2 instance
 resource "aws_instance" "web-server-instance" {
-  ami               = "ami-0947d2ba12ee1ff75"
-  instance_type     = "t2.micro"
+  ami               = var.instance_ami
+  instance_type     = var.instance_type
   availability_zone = "us-east-1a"
   key_name          = "dspv1"
   
