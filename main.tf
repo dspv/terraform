@@ -131,7 +131,7 @@ resource "aws_eip" "one" {
   depends_on                = [aws_internet_gateway.prod-igw]
 }
 
-# 9. Install Ubuntu server and install/ebable Apache 2
+### 9. Install web server on Amazon2 EC2 instance
 resource "aws_instance" "web-server-instance" {
   ami               = "ami-0947d2ba12ee1ff75"
   instance_type     = "t2.micro"
