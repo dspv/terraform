@@ -17,9 +17,20 @@ provider "aws" {
   region = var.aws_region
 }
 
-#################
-### Variables ###
-#################
+
+##########################
+### Default Variables  ###
+##########################
+variable "aws_region" {
+  description = "AWS Region to spin up everything at"
+  default = "eu-central-1"
+}
+
+variable "availability_zone" {
+  description = "Main AZ where to spin up our EC2 instance"
+  default = "eu-central-1a"
+}
+
 variable "subnet_prefix" {
   description = "CIDR block for subnet"
   default = "10.0.1.0/24"
@@ -33,6 +44,11 @@ variable "instance_type" {
 variable "instance_ami" {
   description = "AMI for EC2 instance"
   default = "ami-00a205cb8e06c3c4e"
+}
+
+variable "ssh_key_name" {
+  description = "Your SSH key name"
+  default = "dspv1"
 }
 
 ###############
@@ -79,7 +95,7 @@ resource "aws_route_table" "prod-route-table" {
 resource "aws_subnet" "prod-subnet-1" {
   vpc_id            = aws_vpc.prod-vpc.id
   cidr_block        = var.subnet_prefix
-  availability_zone = var.az
+  availability_zone = var.availability_zone
 
   tags = {
     Name = "prod-subnet"
@@ -158,8 +174,8 @@ resource "aws_eip" "one" {
 resource "aws_instance" "web-server-instance" {
   ami               = var.instance_ami
   instance_type     = var.instance_type
-  availability_zone = var.az
-  key_name          = "dspv1"
+  availability_zone = var.availability_zone
+  key_name          = var.ssh_key_name
   
   root_block_device {
     volume_size       = "30"
@@ -194,7 +210,6 @@ resource "aws_instance" "web-server-instance" {
     Name = "prod-web-server"
   }
 }
-
 
 
 #############################
