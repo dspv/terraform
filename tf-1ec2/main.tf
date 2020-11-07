@@ -32,7 +32,7 @@ variable "instance_type" {
 
 variable "instance_ami" {
   description = "AMI for EC2 instance"
-  default = "ami-0947d2ba12ee1ff75"
+  default = "ami-00a205cb8e06c3c4e"
 }
 
 ###############
@@ -174,10 +174,20 @@ resource "aws_instance" "web-server-instance" {
   user_data = <<-EOF
               #!/bin/bash
               yum update -y
-              yum install -y httpd.x86_64
-              systemctl start httpd.service
-              systemctl enable httpd.service
-              echo "<h1>Hello World from $(hostname -f)</h1><br><h2>I've been made by Terraform</h2>" > /var/www/html/index.html
+              # --- Install Docker
+              amazon-linux-extras install docker
+              service docker start
+              # --- Fix the rights
+              sudo usermod -a -G docker ec2-user
+              docker info
+              # --- Make Docker auto-start
+              sudo chkconfig docker on
+              # ---  Git
+              yum install -y git
+              # --- Docker compose
+              sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+              docker-compose version
               EOF
 
   tags = {
