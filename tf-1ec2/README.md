@@ -9,4 +9,3 @@ Check out for variables in terraform.tfvars
 
 ## Note
 EC2 spins up with my key 'dspv1'
-If you need your own ke
