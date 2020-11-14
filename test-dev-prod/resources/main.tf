@@ -14,8 +14,8 @@ provider "aws" {
 
 ### Set AMI: Ubuntu, latest @ Secelted Region
 data "aws_ami" "ubuntu" {
-  most_recent   = true
-  owners        = ["099720109477"] # Canonical  
+  most_recent = true
+  owners      = ["099720109477"] # Canonical  
 
   filter {
     name   = "name"
@@ -28,12 +28,18 @@ data "aws_ami" "ubuntu" {
   }
 }
 
-resource "aws_instance" "ec2-nano" {
-  ami               = data.aws_ami.ubuntu.id
-  instance_type     = "t2.nano"
+resource "aws_instance" "web" {
+  count = 2
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = lower(var.instance_name)
+  }
 }
 
-resource "aws_instance" "ec2-micro" {
-  ami               = data.aws_ami.ubuntu.id
-  instance_type     = "t2.micro"
+resource "aws_eip" "eip" {
+  count = 2
+  instance  = aws_instance.web[count.index].id
+  vpc       = true
 }
