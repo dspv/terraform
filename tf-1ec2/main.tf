@@ -204,6 +204,10 @@ resource "aws_instance" "web-server-instance" {
               sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
               sudo chmod +x /usr/local/bin/docker-compose
               docker-compose version
+              # --- Reboot
+              sudo reboot
+              # --- Spin up NGINX container
+              docker run -p 80:80 nginx
               EOF
 
   tags = {
